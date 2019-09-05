@@ -90,4 +90,7 @@ fun main() {
     testUnitSignalDisconnect()
     testMultipleConnections()
     testSignalValues()
+    testConnectionManager()
+    testSignalTemporaryCallbacks()
+    testSignalOnceCallbacks()
 }
