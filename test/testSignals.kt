@@ -1,3 +1,6 @@
+import observables.BiSignal
+import observables.Signal
+import observables.UnitSignal
 
 /** Test that a callback connected to a unit signal is invoked when the signal
  *  is emitted. */

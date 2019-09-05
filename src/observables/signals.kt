@@ -1,3 +1,4 @@
+package observables
 
 /** An object that may be connected to with a function of type `F`. */
 interface Connectable<F> {

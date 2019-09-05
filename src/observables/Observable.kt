@@ -1,7 +1,8 @@
+package observables
 
 /** An observed value which emits a signal when changed. */
 class Observable<T>(value: T): Connectable<(T) -> Unit> {
-    /** Signal emitted when the value is changed, with the new value as a
+    /** observables.Signal emitted when the value is changed, with the new value as a
      *  parameter */
     val changed = Signal<T>()
 
