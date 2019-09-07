@@ -2,7 +2,7 @@ package observables
 
 /** An object that may be connected to with a function of type `F`. */
 interface Connectable<F> {
-    fun connect(fn: F)
+    fun connect(fn: F): F
     fun disconnect(fn: F)
     fun disconnectAll()
     /** Create a connection manager for this connectable. */
@@ -40,7 +40,10 @@ class ConnectionManager<F>(private val signal: Connectable<F>): Connectable<F> {
 class UnitSignal: Connectable<() -> Unit> {
     /** Connect a callback to the signal. The callback will be invoked when
      *  the signal is emitted. */
-    override fun connect(fn: () -> Unit) { synchronized(connections) { connections.add(fn) } }
+    override fun connect(fn: () -> Unit): () -> Unit {
+        synchronized(connections) { connections.add(fn) }
+        return fn
+    }
 
     /** Disconnect a callback from the signal. The callback will no longer be
      *  invoked when the signal is emitted. */
@@ -68,7 +71,10 @@ class UnitSignal: Connectable<() -> Unit> {
 open class Signal<T>: Connectable<(T) -> Unit> {
     /** Connect a callback to the signal. The callback will be invoked when
      *  the signal is emitted. */
-    override fun connect(fn: (T) -> Unit) { synchronized(connections) { connections.add(fn) } }
+    override fun connect(fn: (T) -> Unit): (T) -> Unit {
+        synchronized(connections) { connections.add(fn) }
+        return fn
+    }
 
     /** Disconnect a callback from the signal. The callback will no longer be
      *  invoked when the signal is emitted. */
@@ -96,7 +102,10 @@ open class Signal<T>: Connectable<(T) -> Unit> {
 open class BiSignal<A, B>: Connectable<(A, B) -> Unit> {
     /** Connect a callback to the signal. The callback will be invoked when
      *  the signal is emitted. */
-    override fun connect(fn: (A, B) -> Unit) { synchronized(connections) { connections.add(fn) } }
+    override fun connect(fn: (A, B) -> Unit): (A, B) -> Unit {
+        synchronized(connections) { connections.add(fn) }
+        return fn
+    }
 
     /** Disconnect a callback from the signal. The callback will no longer be
      *  invoked when the signal is emitted. */
