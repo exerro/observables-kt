@@ -1,3 +1,4 @@
+import observables.BiSubscribable
 import observables.Subscribable
 import observables.subscribeTo
 

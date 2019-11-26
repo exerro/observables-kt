@@ -6,6 +6,18 @@ import java.lang.ref.WeakReference
 fun <T: Any, P> T.subscribeTo(subscribable: Subscribable<P>, fn: T.(P) -> Unit)
         = subscribable.subscribe(this, fn)
 
+/** Emit nothing. See emit(value). */
+fun UnitSubscribable.emit()
+        = emit(Unit)
+
+/** Emit two values. See emit(value). */
+fun <A, B> BiSubscribable<A, B>.emit(a: A, b: B)
+        = emit(a to b)
+
+/** Emit three values. See emit(value). */
+fun <A, B, C> TriSubscribable<A, B, C>.emit(a: A, b: B, c: C)
+        = emit(Triple(a, b, c))
+
 //////////////////////////////////////////////////////////////////////////////////////////
 
 typealias UnitSubscribable = Subscribable<Unit>
