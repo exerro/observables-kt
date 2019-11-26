@@ -37,6 +37,7 @@ class ConnectionManager<F>(private val signal: Connectable<F>): Connectable<F> {
  * A UnitSignal is a variant of signal that takes no value.
  * This class is thread-safe.
  */
+@Deprecated("Outdated", replaceWith = ReplaceWith("UnitSubscribable"))
 class UnitSignal: Connectable<() -> Unit> {
     /** Connect a callback to the signal. The callback will be invoked when
      *  the signal is emitted. */
@@ -68,6 +69,7 @@ class UnitSignal: Connectable<() -> Unit> {
  * A Signal<T> is a variant of signal that takes a value of type T.
  * This class is thread-safe.
  */
+@Deprecated("Outdated", replaceWith = ReplaceWith("Subscribable<T>"))
 open class Signal<T>: Connectable<(T) -> Unit> {
     /** Connect a callback to the signal. The callback will be invoked when
      *  the signal is emitted. */
@@ -99,6 +101,7 @@ open class Signal<T>: Connectable<(T) -> Unit> {
  * A BiSignal<A, B> is a variant of signal that takes values of types A and B.
  * This class is thread-safe.
  */
+@Deprecated("Outdated", replaceWith = ReplaceWith("BiSubscribable<A, B>"))
 open class BiSignal<A, B>: Connectable<(A, B) -> Unit> {
     /** Connect a callback to the signal. The callback will be invoked when
      *  the signal is emitted. */
@@ -120,43 +123,3 @@ open class BiSignal<A, B>: Connectable<(A, B) -> Unit> {
 
     private val connections = mutableListOf<(A, B) -> Any?>()
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/** Connect a temporary callback to the signal. The callback will be
- *  disconnected once it is invoked and returns true. */
-fun UnitSignal.connectTemporary(fn: () -> Boolean) {
-    fun f() { if (fn()) disconnect(::f) }
-    connect(::f)
-}
-
-/** Connect a temporary callback to the signal. The callback will be
- *  disconnected once it is invoked and returns true. */
-fun <T> Signal<T>.connectTemporary(fn: (T) -> Boolean) {
-    fun f(v: T) { if (fn(v)) disconnect(::f) }
-    connect(::f)
-}
-
-/** Connect a temporary callback to the signal. The callback will be
- *  disconnected once it is invoked and returns true. */
-fun <A, B> BiSignal<A, B>.connectTemporary(fn: (A, B) -> Boolean) {
-    fun f(a: A, b: B) { if (fn(a, b)) disconnect(::f) }
-    connect(::f)
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/** Connect a callback to the signal. The callback will only be invoked once
- *  when the signal is emitted, after which it will be disconnected. */
-fun UnitSignal.connectOnce(fn: () -> Unit)
-        = connectTemporary { fn(); true }
-
-/** Connect a callback to the signal. The callback will only be invoked once
- *  when the signal is emitted, after which it will be disconnected. */
-fun <T> Signal<T>.connectOnce(fn: (T) -> Unit)
-        = connectTemporary { v -> fn(v); true }
-
-/** Connect a callback to the signal. The callback will only be invoked once
- *  when the signal is emitted, after which it will be disconnected. */
-fun <A, B> BiSignal<A, B>.connectOnce(fn: (A, B) -> Unit)
-        = connectTemporary { a, b -> fn(a, b); true }
