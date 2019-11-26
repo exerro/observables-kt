@@ -2,42 +2,20 @@ package observables
 
 import java.lang.ref.WeakReference
 
-/** A subscribable entity with no value emitted. */
-class Subscribable0: Subscribable<Unit>() {
-    /** Emit a signal with no value. */
-    fun emit() = invokeAll(Unit)
-}
-
-/** A subscribable entity with a single value emitted. */
-class Subscribable1<T>: Subscribable<T>() {
-    /** Emit a value. */
-    fun emit(value: T) = invokeAll(value)
-}
-
-/** A subscribable entity with two values emitted. */
-class Subscribable2<A, B>: Subscribable<Pair<A, B>>() {
-    /** Emit two values. */
-    fun emit(a: A, b: B) = invokeAll(a to b)
-}
+/** Subscribe to a subscribable using an owner. */
+fun <T: Any, P> T.subscribeTo(subscribable: Subscribable<P>, fn: T.(P) -> Unit)
+        = subscribable.subscribe(this, fn)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-/** Subscribe to a subscribable using an owner. */
-fun <T: Any> T.subscribeTo(subscribable: Subscribable0, fn: T.() -> Unit)
-        = subscribable.subscribe(this) { fn(this) }
-
-/** Subscribe to a subscribable using an owner. */
-fun <T: Any, P> T.subscribeTo(subscribable: Subscribable1<P>, fn: T.(P) -> Unit)
-        = subscribable.subscribe(this, fn)
-
-/** Subscribe to a subscribable using an owner. */
-fun <T: Any, A, B> T.subscribeTo(subscribable: Subscribable2<A, B>, fn: T.(A, B) -> Unit)
-        = subscribable.subscribe(this) { (a, b) -> fn(this, a, b) }
+typealias UnitSubscribable = Subscribable<Unit>
+typealias BiSubscribable<A, B> = Subscribable<Pair<A, B>>
+typealias TriSubscribable<A, B, C> = Subscribable<Triple<A, B, C>>
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
 /** A subscribable entity. */
-open class Subscribable<P> {
+class Subscribable<P> {
     /** Subscribe to the entity, registering fn to be called whenever values
      *  are emitted by the entity.
      *  
@@ -53,17 +31,20 @@ open class Subscribable<P> {
         synchronized(subscriptions) { subscriptions.removeAll { it.ref.get() == owner } }
     }
     
-    protected fun invokeAll(data: P) {
-        synchronized(subscriptions) {
-            subscriptions.removeAll { it(data) }
-        }
+    /** Emit a value to be passed to all callbacks previously registered.
+     * 
+     *  Note: this will remove any subscriptions of garbage collected objects. */
+    fun emit(value: P) {
+        synchronized(subscriptions) { subscriptions.removeAll { it(value) } }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     private val subscriptions: MutableList<Subscription<*>> = mutableListOf()
     
     ////////////////////////////////////////////////////////////////////////////
 
-    protected inner class Subscription<T: Any>(
+    private inner class Subscription<T: Any>(
             owner: T,
             private val fn: (T, P) -> Unit
     ) {

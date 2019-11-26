@@ -1,7 +1,7 @@
-import observables.Subscribable1
+import observables.Subscribable
 import observables.subscribeTo
 
-val a = Subscribable1<Int>()
+val a = Subscribable<Int>()
 
 fun test() {
     val owner = Object()
