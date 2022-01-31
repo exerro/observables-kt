@@ -1,2 +1,8 @@
-/out/
-/lib/
+# Gradle files
+/.gradle/
+
+# IDEA files
+/.idea/
+
+# Build output
+/build/
