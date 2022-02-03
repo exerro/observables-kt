@@ -1,4 +1,10 @@
-# observables-kt
+<h1 align="center">
+  observables-kt
+</h1>
+
+<p align="center">
+  <a href="https://jitpack.io/#exerro/observables-kt"><img src="https://jitpack.io/v/exerro/observables-kt.svg" /></a>
+</p>
 
 Implements observable values and signals for Kotlin.
 
