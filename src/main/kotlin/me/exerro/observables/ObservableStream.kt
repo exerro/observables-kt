@@ -1,6 +1,20 @@
 package me.exerro.observables
 
-/** A stream of values which can be connected to. */
+/** A stream of values which can be connected to.
+ *
+ *  ```
+ *  // example usage
+ *  val items = ObservableStream.of(2, -1)
+ *      .map { it + 1 }
+ *      .filter { it > 0 }
+ *      .flatMap { listOf(it, it) }
+ *      .connect(::println)
+ *  //> 3
+ *  //> 3
+ *  ```
+ *  @see create
+ *  @see of
+ *  */
 fun interface ObservableStream<out T>: Observable<(T) -> Unit> {
     /** Map the values of this stream using a [map] function. */
     fun <R> map(map: (T) -> R) = ObservableStream { f ->
@@ -38,5 +52,55 @@ fun interface ObservableStream<out T>: Observable<(T) -> Unit> {
             }
             f(new)
         }
+    }
+
+    companion object {
+        /** Create a pair of an [ObservableStream] and a function which pushes
+         *  values to it.
+         *
+         *  Example usage:
+         *  ```
+         *  val (stream, push) = ObservableStream.create<Int>()
+         *
+         *  stream.connect(::println)
+         *  push(27)
+         *  //> 27
+         *  ``` */
+        fun <T> create(): Pair<ObservableStream<T>, (T) -> Unit> {
+            val connections = InternalConnectionManager<(T) -> Unit>()
+            val stream = ObservableStream(connections::add)
+            return stream to { value -> connections.forEach { it(value) } }
+        }
+
+        /** Create an [ObservableStream] which, when connected to, invokes the
+         *  callback with each item in [items].
+         *
+         *  Example usage:
+         *  ```
+         *  val stream = ObservableStream.of(listOf(1, 2, 3))
+         *
+         *  stream.connect(::println)
+         *  //> 1
+         *  //> 2
+         *  //> 3
+         *  ``` */
+        fun <T> of(items: Iterable<T>) = ObservableStream {
+            items.forEach(it)
+            ObservableConnection.blank
+        }
+
+        /** Create an [ObservableStream] which, when connected to, invokes the
+         *  callback with each item in [items].
+         *
+         *  Example usage:
+         *  ```
+         *  val stream = ObservableStream.of(1, 2, 3)
+         *
+         *  stream.connect(::println)
+         *  //> 1
+         *  //> 2
+         *  //> 3
+         *  ``` */
+        fun <T> of(vararg items: T) = of(items.toList())
     }
 }

@@ -3,10 +3,11 @@ package me.exerro.observables
 import kotlin.reflect.KProperty
 
 /** An [MutableObservableValue] is a wrapper around a mutable value, which can
- *  be connected to, to get notified of changes.
+ *  be connected to, to get notified of changes. It's the mutable equivalent of
+ *  [ObservableValue], letting you directly set the value.
  *
- *  See: [MutableObservableValue.create] and
- *  [MutableObservableValue.createLateInit]. */
+ *  @see create
+ *  @See createLateInit */
 interface MutableObservableValue<T>: ObservableValue<T> {
     override var currentValue: T
 
@@ -23,6 +24,8 @@ interface MutableObservableValue<T>: ObservableValue<T> {
                     field = value
                     manager.forEach { it(value) }
                 }
+
+            override val isInitialised = true
 
             override fun setValue(self: Any?, property: KProperty<*>, value: T) {
                 currentValue = value
@@ -45,6 +48,8 @@ interface MutableObservableValue<T>: ObservableValue<T> {
                     this.value = value
                     manager.forEach { it(value) }
                 }
+
+            override val isInitialised = ::value.isInitialized
 
             override fun setValue(self: Any?, property: KProperty<*>, value: T) {
                 currentValue = value

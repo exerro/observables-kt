@@ -69,6 +69,8 @@ fun testSignalValues() {
     println("Signal callbacks invoked with correct values.")
 }
 
+/** Test that the create*SignalOf methods invoke the connected callbacks with
+ *  the right values. */
 fun testSignalsOf() {
     fun randomCount() = 4 + (Math.random() * 5).toInt()
 
@@ -84,7 +86,7 @@ fun testSignalsOf() {
     var r4 = 0
     var r5 = 0
 
-    Observable.createUnitSignals(c1).connect { ++r1 }
+    Observable.createUnitSignalOf(c1).connect { ++r1 }
     Observable.createSignalOf(i2).connect { r2 += it }
     Observable.createBiSignalOf(i3a zip i3b).connect { a, b ->
         r3a += a
@@ -101,12 +103,4 @@ fun testSignalsOf() {
     assert(r5 == 10) { "Vararg signal called with wrong values" }
 
     println("create*SignalOf ok")
-}
-
-fun main() {
-    testUnitSignalCallbackCalled()
-    testUnitSignalDisconnect()
-    testMultipleConnections()
-    testSignalValues()
-    testSignalsOf()
 }
