@@ -1,6 +1,60 @@
 # observables-kt
 
-Implement observable values and signals for Kotlin.
+Implements observable values and signals for Kotlin.
+
+```kotlin
+val items = ObservableStream
+  .of(1, 2, 3)
+  .map { it + 1 }
+  .filter { it > 2 }
+
+items.connect(::println)
+//> 3
+//> 4
+
+////////////////////////////////////////////
+
+val value = MutableObservableValue.create(3)
+
+value.connect(::println)
+value.currentValue = 2
+//> 2
+```
+
+## Installation
+
+Check out the [releases](https://github.com/exerro/observables-kt/releases), or
+using a build system...
+
+### Gradle (`build.gradle.kts`)
+
+```kotlin
+repositories {
+    // ...
+    maven { url = uri("https://jitpack.io") }
+}
+
+dependencies {
+    implementation("me.exerro:observables-kt:1.1.1")
+}
+```
+
+### Maven
+
+```xml
+<repositories>
+  <repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+  </repository>
+</repositories>
+
+<dependency>
+  <groupId>me.exerro</groupId>
+  <artifactId>observables-kt</artifactId>
+  <version>Tag</version>
+</dependency>
+```
 
 ## Observables
 
@@ -9,7 +63,7 @@ The library is centred around two interfaces:
 * `ObservableStream` - an extension of `Observable`, specialised for streams of 
   values. Can be mapped, filtered, etc.
 
-When a connection is made, it returns an `ObservableConnection`, which can be
+When a connection is made, an `ObservableConnection` is returned, which can be
 used to disconnect the callback. Multiple connections can be joined to form a
 single connection using `ObservableConnection.join`.
 
@@ -39,7 +93,23 @@ Signals are all thread-safe.
 
 ## ObservableStreams
 
-TODO
+An `ObservableStream` is a stream of values which can be connected to. You can
+map, filter, flatMap, and fold these streams using built-in functions. For
+example,
+
+```kotlin
+ObservableStream
+  .of(1, 2, 3, "hello") // 1, 2, 3, "hello"
+  .filterIsInstance<Int>() // 1, 2, 3
+  .map { it - 1 } // 0, 1, 2
+  .filter { it > 0 } // 1, 2
+  .flatMap { v -> (1 .. v).map { v } } // 1, 2, 2
+  .fold(3) { a, b -> a + b } // [3], 4, 6, 8
+  .connect(::println)
+//> 4
+//> 6
+//> 8
+```
 
 ## ObservableValues
 
