@@ -16,9 +16,6 @@ dependencies {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
-    kotlinOptions.freeCompilerArgs += "-language-version"
-    kotlinOptions.freeCompilerArgs += "1.7"
-    kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.experimental.ExperimentalTypeInference"
 }
 
 publishing {
