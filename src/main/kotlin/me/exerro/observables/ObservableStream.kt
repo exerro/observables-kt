@@ -17,18 +17,18 @@ package me.exerro.observables
  *  */
 fun interface ObservableStream<out T>: Observable<(T) -> Unit> {
     /** Map the values of this stream using a [map] function. */
-    fun <R> map(map: (T) -> R) = ObservableStream { f ->
+    fun <R> map(map: (T) -> R) = ObservableStream<R> { f ->
         connect { f(map(it)) }
     }
 
     /** Filter the values of this stream using a [predicate]. */
-    fun filter(predicate: (T) -> Boolean) = ObservableStream { f ->
+    fun filter(predicate: (T) -> Boolean) = ObservableStream<T> { f ->
         connect { if (predicate(it)) f(it) }
     }
 
     /** Map the values of this stream to an iterable using a [map] function,
      *  flattening the result into a standard [ObservableStream]. */
-    fun <R> flatMap(map: (T) -> Iterable<R>) = ObservableStream { f ->
+    fun <R> flatMap(map: (T) -> Iterable<R>) = ObservableStream<R> { f ->
         connect { for (item in map(it)) { f(item) } }
     }
 
@@ -39,7 +39,7 @@ fun interface ObservableStream<out T>: Observable<(T) -> Unit> {
         initial: A,
         includeInitial: Boolean = true,
         onEach: (A, T) -> A,
-    ) = ObservableStream { f ->
+    ) = ObservableStream<A> { f ->
         var current = initial
         val lock = Object()
 
@@ -84,7 +84,7 @@ fun interface ObservableStream<out T>: Observable<(T) -> Unit> {
          *  //> 2
          *  //> 3
          *  ``` */
-        fun <T> of(items: Iterable<T>) = ObservableStream {
+        fun <T> of(items: Iterable<T>) = ObservableStream<T> {
             items.forEach(it)
             ObservableConnection.blank
         }

@@ -58,10 +58,11 @@ fun interface Observable<in F> {
 
         /** Return a an [Observable] which, when connected to, will invoke the
          *  callback for each item in [items]. */
-        fun <T> createSignalOf(items: Iterable<T>) = ObservableStream {
-            items.forEach(it)
-            ObservableConnection.blank
-        }
+        fun <T> createSignalOf(items: Iterable<T>): ObservableStream<T> =
+            ObservableStream {
+                items.forEach(it)
+                ObservableConnection.blank
+            }
 
         /** Return a an [Observable] which, when connected to, will invoke the
          *  callback for each pair of items in [items]. */

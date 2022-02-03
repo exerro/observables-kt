@@ -9,4 +9,4 @@ package me.exerro.observables
  *  @see ObservableStream.filter
  *  */
 inline fun <reified T> ObservableStream<*>.filterIsInstance() =
-    ObservableStream { fn -> connect { if (it is T) fn(it) } }
+    ObservableStream<T> { fn -> connect { if (it is T) fn(it) } }

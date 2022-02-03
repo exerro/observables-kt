@@ -22,4 +22,27 @@ interface ObservableValue<out T>: ObservableStream<T> {
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun connect(onChanged: (T) -> Unit): ObservableConnection
+
+    companion object {
+        /** Create an [ObservableValue] with a single constant value. Since it
+         *  will never change, any callbacks passed to [connect] will never be
+         *  called.
+         *
+         *  ```
+         *  // example usage
+         *  val value = ObservableValue.of(3)
+         *
+         *  println(value)
+         *  //> 3
+         *  ```
+         *  @see MutableObservableValue.create
+         *  @see MutableObservableValue.createLateInit
+         *  */
+        fun <T> of(value: T) = object: ObservableValue<T> {
+            override val currentValue = value
+            override val isInitialised = true
+            override fun getValue(self: Any?, property: KProperty<*>) = value
+            override fun connect(onChanged: (T) -> Unit) = ObservableConnection.blank
+        }
+    }
 }
