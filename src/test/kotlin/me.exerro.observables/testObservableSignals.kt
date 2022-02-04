@@ -3,7 +3,7 @@ package me.exerro.observables
 /** Test that a callback connected to a unit signal is invoked when the signal
  *  is emitted. */
 fun testUnitSignalCallbackCalled() {
-    val (s1, emitS1) = Observable.createUnitSignal()
+    val (s1, emitS1) = ObservableSignal.createUnitSignal()
     var called = false
 
     s1.connect { called = true }
@@ -16,7 +16,7 @@ fun testUnitSignalCallbackCalled() {
 /** Test that a callback connected to a unit signal that is then disconnected
  *  will not be invoked when the signal is emitted. */
 fun testUnitSignalDisconnect() {
-    val (s1, emitS1) = Observable.createUnitSignal()
+    val (s1, emitS1) = ObservableSignal.createUnitSignal()
     var called1 = false
 
     fun fn1() {
@@ -33,8 +33,8 @@ fun testUnitSignalDisconnect() {
 }
 
 /** Test that multiple connections may be made to a unit signal. */
-fun testMultipleConnections() {
-    val (s1, emitS1) = Observable.createUnitSignal()
+fun testMultipleSignalConnections() {
+    val (s1, emitS1) = ObservableSignal.createUnitSignal()
     var called1 = false
     var called2 = false
 
@@ -51,8 +51,8 @@ fun testMultipleConnections() {
 /** Test that the values given to the connected callbacks of a signal are
  *  correct. */
 fun testSignalValues() {
-    val (s1, emitS1) = Observable.createSignal<Int>()
-    val (s2, emitS2) = Observable.createBiSignal<Float, Float>()
+    val (s1, emitS1) = ObservableSignal.createSignal<Int>()
+    val (s2, emitS2) = ObservableSignal.createBiSignal<Float, Float>()
     var acc1 = 0
     var acc2 = 0f
 
@@ -86,14 +86,14 @@ fun testSignalsOf() {
     var r4 = 0
     var r5 = 0
 
-    Observable.createUnitSignalOf(c1).connect { ++r1 }
-    Observable.createSignalOf(i2).connect { r2 += it }
-    Observable.createBiSignalOf(i3a zip i3b).connect { a, b ->
+    ObservableSignal.createUnitSignalOf(c1).connect { ++r1 }
+    ObservableSignal.createSignalOf(i2).connect { r2 += it }
+    ObservableSignal.createBiSignalOf(i3a zip i3b).connect { a, b ->
         r3a += a
         r3b += b
     }
-    Observable.createSignalOf(1, 2, 3).connect { r4 += it }
-    Observable.createBiSignalOf(1 to 2, 3 to 4).connect { a, b -> r5 += a + b }
+    ObservableSignal.createSignalOf(1, 2, 3).connect { r4 += it }
+    ObservableSignal.createBiSignalOf(1 to 2, 3 to 4).connect { a, b -> r5 += a + b }
 
     assert(r1 == c1) { "Unit signal called incorrect number of times" }
     assert(r2 == i2.sum()) { "Signal called with wrong values" }

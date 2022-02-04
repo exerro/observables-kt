@@ -9,7 +9,7 @@ import kotlin.reflect.KProperty
  *  @see MutableObservableValue.create
  *  @see MutableObservableValue.createLateInit */
 interface ObservableValue<out T>: ObservableStream<T> {
-    /** Value currently held by this [ObservableValue]. */
+    /** Value held by this [ObservableValue] upon access. */
     val currentValue: T
 
     /** Whether the value has been initialised, relevant with
@@ -23,6 +23,7 @@ interface ObservableValue<out T>: ObservableStream<T> {
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun connect(onChanged: (T) -> Unit): ObservableConnection
 
+    /** @see ObservableValue */
     companion object {
         /** Create an [ObservableValue] with a single constant value. Since it
          *  will never change, any callbacks passed to [connect] will never be

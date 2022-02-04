@@ -3,7 +3,7 @@ package me.exerro.observables
 import kotlin.reflect.KProperty
 
 /** An [MutableObservableValue] is a wrapper around a mutable value, which can
- *  be connected to, to get notified of changes. It's the mutable equivalent of
+ *  be connected to, to get notified of changes. It is the mutable equivalent of
  *  [ObservableValue], letting you directly set the value.
  *
  *  ```
@@ -26,6 +26,7 @@ interface MutableObservableValue<T>: ObservableValue<T> {
     /** Implement [setValue] to make this a valid mutable property delegate. */
     operator fun setValue(self: Any?, property: KProperty<*>, value: T)
 
+    /** @see MutableObservableValue */
     companion object {
         /** Create a [MutableObservableValue] with an [initialValue].
          *
@@ -62,7 +63,7 @@ interface MutableObservableValue<T>: ObservableValue<T> {
             override fun connect(onChanged: (T) -> Unit) =
                 manager.add(onChanged)
 
-            private val manager = InternalConnectionManager<(T) -> Unit>()
+            private val manager = ConnectionHelper<(T) -> Unit>()
         }
 
         /** Create a [MutableObservableValue] to be initialised later.
@@ -97,7 +98,7 @@ interface MutableObservableValue<T>: ObservableValue<T> {
                 manager.add(onChanged)
 
             private lateinit var value: T
-            private val manager = InternalConnectionManager<(T) -> Unit>()
+            private val manager = ConnectionHelper<(T) -> Unit>()
         }
     }
 }

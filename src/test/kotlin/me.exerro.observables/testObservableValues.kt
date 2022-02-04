@@ -1,5 +1,18 @@
 package me.exerro.observables
 
+/** Test that [ObservableValue.of] returns an [ObservableValue] which behaves
+ *  appropriately. */
+fun testObservableValueOf() {
+    val valueObservable = ObservableValue.of(1)
+    val value by valueObservable
+
+    assert(valueObservable.isInitialised)
+    assert(valueObservable.currentValue == 1)
+    assert(value == 1)
+
+    println("ObservableValue.of is constant and awesome")
+}
+
 /** Test that [MutableObservableValue.create] returns a [MutableObservableValue]
  *  which behaves appropriately. */
 fun testObservableValueCreate() {

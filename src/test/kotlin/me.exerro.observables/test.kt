@@ -4,6 +4,12 @@ package me.exerro.observables
 fun main() {
     testObservableConnections()
 
+    testUnitSignalCallbackCalled()
+    testUnitSignalDisconnect()
+    testMultipleSignalConnections()
+    testSignalValues()
+    testSignalsOf()
+
     testObservableStreamCreate()
     testObservableStreamOf()
     testObservableStreamMap()
@@ -12,12 +18,7 @@ fun main() {
     testObservableStreamFlatMap()
     testObservableStreamFold()
 
+    testObservableValueOf()
     testObservableValueCreate()
     testObservableValueCreateLateInit()
-
-    testUnitSignalCallbackCalled()
-    testUnitSignalDisconnect()
-    testMultipleConnections()
-    testSignalValues()
-    testSignalsOf()
 }

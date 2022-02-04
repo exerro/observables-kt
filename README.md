@@ -41,7 +41,7 @@ repositories {
 }
 
 dependencies {
-    implementation("me.exerro:observables-kt:1.1.1")
+    implementation("me.exerro:observables-kt:1.2.0")
 }
 ```
 
@@ -58,7 +58,7 @@ dependencies {
 <dependency>
   <groupId>me.exerro</groupId>
   <artifactId>observables-kt</artifactId>
-  <version>Tag</version>
+  <version>1.2.0</version>
 </dependency>
 ```
 
@@ -73,7 +73,7 @@ When a connection is made, an `ObservableConnection` is returned, which can be
 used to disconnect the callback. Multiple connections can be joined to form a
 single connection using `ObservableConnection.join`.
 
-## Signals
+## ObservableSignals
 
 A signal is similar to an event.
 
@@ -83,11 +83,11 @@ when the signal is "emitted".
 Some variants of signals take parameters as well, which are given to emit and
 passed to the callbacks connected when invoked.
 
-You can create signals with the `Observable.create*Signal` and
-`Observable.create*SignalOf` methods, for example:
+You can create signals with the `ObservableSignal.create*Signal` and
+`ObservableSignal.create*SignalOf` methods, for example:
 
 ```kotlin
-val (s, emit) = Observable.createSignal<Int>()
+val (s, emit) = ObservableSignal.createSignal<Int>()
 
 s.connect { println("Got $it") }
 

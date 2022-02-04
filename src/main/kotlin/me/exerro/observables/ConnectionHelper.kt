@@ -1,10 +1,22 @@
 package me.exerro.observables
 
-/** Manages a list of connections of type [F] in a thread-safe manner. */
-internal class InternalConnectionManager<F> {
+/** Manages a list of connections of type [F] in a thread-safe manner.
+ *
+ *  ```
+ *  // example usage
+ *  val helper = ConnectionHelper<() -> Unit>()
+ *  val connection = helper.add { println("Here") }
+ *
+ *  helper.onEach { it() }
+ *  //> Here
+ *  connection.disconnect()
+ *  helper.onEach { it() }
+ *  ```
+ *  */
+class ConnectionHelper<F> {
     /** Add a callback, returning an [ObservableConnection] which will later
      *  remove it. */
-    internal fun add(f: F): ObservableConnection {
+    fun add(f: F): ObservableConnection {
         synchronized(connections) { connections.add(f) }
         return ObservableConnection {
             synchronized(connections) { connections.remove(f) }
@@ -12,7 +24,7 @@ internal class InternalConnectionManager<F> {
     }
 
     /** Run [F] with each callback. */
-    inline fun forEach(fn: (F) -> Unit) {
+    fun forEach(fn: (F) -> Unit) {
         for (f in synchronized(connections) { connections.toList() }) {
             fn(f)
         }

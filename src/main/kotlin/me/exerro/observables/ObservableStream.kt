@@ -1,6 +1,6 @@
 package me.exerro.observables
 
-/** A stream of values which can be connected to.
+/** A stream of values, which can be connected to.
  *
  *  ```
  *  // example usage
@@ -54,8 +54,9 @@ fun interface ObservableStream<out T>: Observable<(T) -> Unit> {
         }
     }
 
+    /** @see ObservableStream */
     companion object {
-        /** Create a pair of an [ObservableStream] and a function which pushes
+        /** Create a pair of an [ObservableStream] and a function that pushes
          *  values to it.
          *
          *  Example usage:
@@ -67,7 +68,7 @@ fun interface ObservableStream<out T>: Observable<(T) -> Unit> {
          *  //> 27
          *  ``` */
         fun <T> create(): Pair<ObservableStream<T>, (T) -> Unit> {
-            val connections = InternalConnectionManager<(T) -> Unit>()
+            val connections = ConnectionHelper<(T) -> Unit>()
             val stream = ObservableStream(connections::add)
             return stream to { value -> connections.forEach { it(value) } }
         }
