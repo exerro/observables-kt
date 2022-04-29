@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-  <a href="https://jitpack.io/#exerro/observables-kt"><img src="https://jitpack.io/v/exerro/observables-kt.svg" /></a>
+  <a href="https://jitpack.io/#exerro/observables-kt"><img src="https://jitpack.io/v/exerro/observables-kt.svg" alt="JitPack badge"/></a>
 </p>
 
 Implements observable values and signals for Kotlin.
