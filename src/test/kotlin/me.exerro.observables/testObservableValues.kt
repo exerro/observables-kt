@@ -16,7 +16,7 @@ fun testObservableValueOf() {
 /** Test that [MutableObservableValue.create] returns a [MutableObservableValue]
  *  which behaves appropriately. */
 fun testObservableValueCreate() {
-    val valueObservable = MutableObservableValue.create(0)
+    val valueObservable = MutableObservableValue.of(0)
     var value by valueObservable
     var sum = 0
 

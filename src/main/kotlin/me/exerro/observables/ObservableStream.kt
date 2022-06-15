@@ -57,7 +57,8 @@ fun interface ObservableStream<out T>: Observable<(T) -> Unit> {
     /** @see ObservableStream */
     companion object {
         /** Create a pair of an [ObservableStream] and a function that pushes
-         *  values to it.
+         *  values to it. Note, this function is not thread safe. See
+         *  [ObservableSignal] for a thread safe equivalent.
          *
          *  Example usage:
          *  ```
